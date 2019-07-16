@@ -1,107 +1,106 @@
 <!DOCTYPE html>
 <html>
-<script>
+  <script>
 
-  // url Async requesting function
-  function httpGetAsync(theUrl, callback, index) {
-    // create the request object
-    var xmlHttp = new XMLHttpRequest();
+    // url Async requesting function
+    function httpGetAsync(theUrl, callback, index) {
+      // create the request object
+      var xmlHttp = new XMLHttpRequest();
 
-    // set the state change callback to capture when the response comes in
-    xmlHttp.onreadystatechange = function () {
-      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-        callback(xmlHttp.responseText, index);
+      // set the state change callback to capture when the response comes in
+      xmlHttp.onreadystatechange = function () {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+          callback(xmlHttp.responseText, index);
+        }
+      }
+
+      // open as a GET call, pass in the url and set async = True
+      xmlHttp.open("GET", theUrl, true);
+
+      // call send with no params as they were passed in on the url string
+      xmlHttp.send(null);
+
+      return;
+    }
+
+    // callback for the top 8 GIFs of search
+    function tenorCallback_search(responsetext, index) {
+      // parse the json response
+      var response_objects = JSON.parse(responsetext);
+
+      top_10_gifs = response_objects["results"];
+
+      // load the GIFs -- for our example we will load the first GIFs preview size (nanogif) and share size (tinygif)
+
+      var gifUrl = top_10_gifs[0]["media"][0]["nanogif"]["url"];
+      setGifUrl(index, gifUrl);
+      return;
+    }
+
+    function createGifElement(index) {
+
+      var listItem = document.createElement("li");
+      listItem.style = "display: inline";
+
+      var theGif = document.createElement("img");
+
+      theGif.style = "width:220px;height:164px;";
+      theGif.id = "translation" + index;
+      listItem.appendChild(theGif);
+
+      document.getElementById("translationArea").appendChild(listItem);
+    }
+
+    function setGifUrl(index, url) {
+      var theGif = document.getElementById("translation" + index);
+      theGif.src = url;
+    }
+
+    // function to call the trending and category endpoints
+    function getData(searchTerm, index) {
+      // set the apikey and limit
+      var apikey = "7I2N97POBC9E";
+      var lmt = 1;
+
+      // using default locale of en_US
+      var searchUrl = "https://api.tenor.com/v1/search?tag=" + searchTerm + "&key=" +
+        apikey + "&limit=" + lmt;
+
+      httpGetAsync(searchUrl, tenorCallback_search, index);
+
+      // data will be loaded by each call's callback
+      return;
+    }
+
+
+    function doSearch() {
+      clearTranslations();
+      var textToTranslate = document.getElementById('searchTxt').value;
+      var searchTermsArray = textToTranslate.split(' ');
+      for (var i = 0; i < searchTermsArray.length; i++) {
+        createGifElement(i);
+        getData(searchTermsArray[i], i);
       }
     }
 
-    // open as a GET call, pass in the url and set async = True
-    xmlHttp.open("GET", theUrl, true);
-
-    // call send with no params as they were passed in on the url string
-    xmlHttp.send(null);
-
-    return;
-  }
-
-  // callback for the top 8 GIFs of search
-  function tenorCallback_search(responsetext, index) {
-    // parse the json response
-    var response_objects = JSON.parse(responsetext);
-
-    top_10_gifs = response_objects["results"];
-
-    // load the GIFs -- for our example we will load the first GIFs preview size (nanogif) and share size (tinygif)
-
-    var gifUrl = top_10_gifs[0]["media"][0]["nanogif"]["url"];
-    setGifUrl(index, gifUrl);
-    return;
-  }
-
-  function createGifElement(index) {
-
-    var listItem = document.createElement("li");
-    listItem.style = "display: inline";
-
-    var theGif = document.createElement("img");
-
-    theGif.style = "width:220px;height:164px;";
-    theGif.id = "translation" + index;
-    listItem.appendChild(theGif);
-
-    document.getElementById("translationArea").appendChild(listItem);
-  }
-
-  function setGifUrl(index, url) {
-    var theGif = document.getElementById("translation" + index);
-    theGif.src = url;
-  }
-
-  // function to call the trending and category endpoints
-  function getData(searchTerm, index) {
-    // set the apikey and limit
-    var apikey = "7I2N97POBC9E";
-    var lmt = 1;
-
-    // using default locale of en_US
-    var searchUrl = "https://api.tenor.com/v1/search?tag=" + searchTerm + "&key=" +
-      apikey + "&limit=" + lmt;
-
-    httpGetAsync(searchUrl, tenorCallback_search, index);
-
-    // data will be loaded by each call's callback
-    return;
-  }
-
-
-  function doSearch() {
-    clearTranslations();
-    var textToTranslate = document.getElementById('searchTxt').value;
-    var searchTermsArray = textToTranslate.split(' ');
-    for (var i = 0; i < searchTermsArray.length; i++) {
-      createGifElement(i);
-      getData(searchTermsArray[i], i);
+    function clearTranslations() {
+      var translationHolder = document.getElementById("translationArea");
+      while (translationHolder.firstChild) {
+        translationHolder.removeChild(translationHolder.firstChild);
+      }
     }
-  }
-
-  function clearTranslations() {
-    var translationHolder = document.getElementById("translationArea");
-    while (translationHolder.firstChild) {
-      translationHolder.removeChild(translationHolder.firstChild);
-    }
-  }
 
 
-</script>
+  </script>
 
-<body>
-<h2>Enter text</h2>
-<input name="searchTxt" type="text" maxlength="256" id="searchTxt" class="searchField"/>
-<button id="searchButton" onClick="doSearch()">Translate</button>
+  <body>
+    <h2>Enter text</h2>
+    <input name="searchTxt" type="text" maxlength="256" id="searchTxt" class="searchField"/>
+    <button id="searchButton" onClick="doSearch()">Translate</button>
 
-<h2>Translation</h2>
-<ol id="translationArea" style="list-style-type:none">
+    <h2>Translation</h2>
+    <ol id="translationArea" style="list-style-type:none">
+    </ol>
 
-</ol>
-
-</body>
+  </body>
 </html>
