@@ -7,7 +7,7 @@ class Tenor {
 
         // using default locale of en_US
         const searchUrl =
-            "https://api.tenor.com/v1/search?tag=" +
+            "https://api.tenor.com/v1/random?tag=" +
             searchTerm +
             "&key=" +
             apikey +
