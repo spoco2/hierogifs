@@ -2,7 +2,8 @@
 <html>
 
 <head>
-  <link href="https://fonts.googleapis.com/css?family=Fredericka+the+Great&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="./assets/styles.css">
 
   <script type="module">
@@ -13,13 +14,30 @@
 
 
 <body>
-  <h2>What do you want to translate?</h2>
+  <div class="prologue">
+    <p>
+      <span class="first-letter">S</span>cholars around the world had been studying for decades the strange, moving
+      images they found strewn around what was left of the World Wide Web.
+      Unsure of what the incomprehensible glyphs meant, they were sure that they held the key to understanding the
+      people who populated the Internet of that time.
+    </p>
+    <p>
+        <span class="first-letter">I</span>t wasn't until one brilliant linguist, Dr Susanof Flicklebiers, cracked the code, and started extracting meaning
+      from what she called "Hierogifs" that the world could really understand what people were saying to each other when
+      the world was dominated by online communication.
+    </p>
+    <p>
+        <span class="first-letter">I</span>t was less than complimentary.
+    </p>
+  </div>
+  <h2>Enter a sentence to translate</h2>
   <form onsubmit="Page.doSearch();return false">
-    <input name="searchTxt" type="text" maxlength="256" id="searchTxt" class="searchField" />
+    <input name="searchTxt" class="niceInput" type="text" maxlength="300" id="searchTxt" class="searchField" />
+    <br />
     <button type="submit" class="niceButton" id="searchButton">Translate</button>
   </form>
 
-  <h2>Translation</h2>
+  <h2>Hierogif translation</h2>
   <ol id="translationArea" style="list-style-type:none"></ol>
 </body>
 

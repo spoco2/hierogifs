@@ -7,7 +7,7 @@ class Page {
 
     var theGif = document.createElement("img");
 
-    theGif.style = "width:220px;height:164px;";
+    theGif.className = "gifImg";
     theGif.id = "translation" + index;
     listItem.appendChild(theGif);
 
